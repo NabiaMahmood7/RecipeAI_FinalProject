@@ -2,13 +2,13 @@
 package week11.st482988.recipeai_finalproject.ui.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import week11.st482988.recipeai_finalproject.viewmodel.AuthViewModel
 import week11.st482988.recipeai_finalproject.ui.screens.LoginScreen
 import week11.st482988.recipeai_finalproject.ui.screens.SignUpScreen
+import week11.st482988.recipeai_finalproject.ui.screens.ForgotPasswordScreen
 import week11.st482988.recipeai_finalproject.ui.screens.ProfileSetupScreen
 import week11.st482988.recipeai_finalproject.ui.screens.HomeScreen
 import week11.st482988.recipeai_finalproject.ui.screens.FavoritesScreen
@@ -20,24 +20,15 @@ fun SetupNavGraph(
     navController: NavHostController,
     authViewModel: AuthViewModel
 ) {
-    val currentUser = authViewModel.currentUser.collectAsState().value
-
-    val startDestination = if (currentUser != null) {
-        if (currentUser.cookingSkillLevel.isEmpty()) {
-            Screen.ProfileSetup.route
-        } else {
-            Screen.Home.route
-        }
-    } else {
-        Screen.Login.route
-    }
-
     NavHost(
         navController = navController,
-        startDestination = startDestination
+        startDestination = Screen.Splash.route
     ) {
         composable(route = Screen.Splash.route) {
-            SplashScreen(navController = navController)
+            SplashScreen(
+                navController = navController,
+                authViewModel = authViewModel
+            )
         }
 
         composable(route = Screen.Login.route) {
@@ -49,6 +40,13 @@ fun SetupNavGraph(
 
         composable(route = Screen.SignUp.route) {
             SignUpScreen(
+                navController = navController,
+                authViewModel = authViewModel
+            )
+        }
+
+        composable(route = Screen.ForgotPassword.route) {
+            ForgotPasswordScreen(
                 navController = navController,
                 authViewModel = authViewModel
             )
@@ -88,6 +86,7 @@ sealed class Screen(val route: String) {
     object Splash : Screen("splash")
     object Login : Screen("login")
     object SignUp : Screen("signup")
+    object ForgotPassword : Screen("forgot_password")
     object ProfileSetup : Screen("profile_setup")
     object Home : Screen("home")
     object Search : Screen("search")

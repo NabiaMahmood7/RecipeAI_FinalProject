@@ -12,7 +12,7 @@ val Tertiary = Color(0xFF03DAC6)
 // Semantic Colors
 val Error = Color(0xFFB00020)
 val ErrorDark = Color(0xFFCF6679)
-val Background = Color(0xFFFAFAFA)
+val Background = Color(0xFFFBF8F2)
 val Surface = Color(0xFFFFFFFF)
 
 // Text Colors
@@ -31,8 +31,18 @@ val SuccessGreen = Color(0xFF4CAF50)
 val WarningOrange = Color(0xFFFFC107)
 val DarkBackground = Color(0xFF121212)
 
-val Primary = Color(0xFFFF6B35)
-val LightGray = Color(0xFFE0E0E0)
+val Primary = Color(0xFF5C863E)
+val LightGray = Color(0xFFE8E1D3)
+
+// RecipeAI Figma design tokens
+val SplashGreen = Color(0xFF9DC183)
+val MutedText = Color(0xFFB3A890)
+val SubtitleGray = Color(0x80000000)
+val ChipGreen = Color(0xCC5C863E)
+val LogoutRed = Color(0x99FF0000)
+val CardTitleBlue = Color(0xFF3E5481)
+val CardSecondaryText = Color(0xFF9FA5C0)
+val CardMetaGray = Color(0xFF5E5E5E)
 
 
 val Purple80 = Color(0xFFD0BCFF)

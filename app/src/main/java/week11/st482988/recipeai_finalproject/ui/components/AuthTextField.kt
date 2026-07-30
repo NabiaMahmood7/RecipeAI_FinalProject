@@ -1,6 +1,8 @@
 package week11.st482988.recipeai_finalproject.ui.components
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -23,6 +25,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import week11.st482988.recipeai_finalproject.ui.theme.LightGray
+import week11.st482988.recipeai_finalproject.ui.theme.MutedText
 import week11.st482988.recipeai_finalproject.ui.theme.Primary
 
 @Composable
@@ -36,16 +39,23 @@ fun AuthTextField(
     errorMessage: String? = null
 ) {
     var isPasswordVisible by remember { mutableStateOf(false) }
+    val interactionSource = remember { MutableInteractionSource() }
+    val isFocused by interactionSource.collectIsFocusedAsState()
 
     TextField(
         value = value,
         onValueChange = onValueChange,
-        label = { Text(label) },
+        placeholder = { Text(label, color = MutedText) },
+        interactionSource = interactionSource,
         modifier = modifier
             .border(
-                width = 1.dp,
-                color = if (errorMessage != null) MaterialTheme.colorScheme.error else LightGray,
-                shape = RoundedCornerShape(8.dp)
+                width = 2.dp,
+                color = when {
+                    errorMessage != null -> MaterialTheme.colorScheme.error
+                    isFocused -> Primary
+                    else -> LightGray
+                },
+                shape = RoundedCornerShape(10.dp)
             ),
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
         visualTransformation = if (isPassword && !isPasswordVisible) {
@@ -66,11 +76,13 @@ fun AuthTextField(
             null
         },
         isError = errorMessage != null,
+        shape = RoundedCornerShape(10.dp),
         colors = TextFieldDefaults.colors(
-            unfocusedContainerColor = MaterialTheme.colorScheme.background,
-            focusedContainerColor = MaterialTheme.colorScheme.background,
-            focusedIndicatorColor = Primary,
-            unfocusedIndicatorColor = LightGray
+            unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+            focusedContainerColor = MaterialTheme.colorScheme.surface,
+            focusedIndicatorColor = androidx.compose.ui.graphics.Color.Transparent,
+            unfocusedIndicatorColor = androidx.compose.ui.graphics.Color.Transparent,
+            errorIndicatorColor = androidx.compose.ui.graphics.Color.Transparent
         ),
         singleLine = true
     )

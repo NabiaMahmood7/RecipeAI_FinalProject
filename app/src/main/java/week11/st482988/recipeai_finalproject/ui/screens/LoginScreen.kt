@@ -1,14 +1,21 @@
 package week11.st482988.recipeai_finalproject.ui.screens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -19,13 +26,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import week11.st482988.recipeai_finalproject.R
 import week11.st482988.recipeai_finalproject.ui.components.AuthTextField
 import week11.st482988.recipeai_finalproject.ui.components.CustomButton
 import week11.st482988.recipeai_finalproject.ui.navigation.Screen
+import week11.st482988.recipeai_finalproject.ui.theme.MutedText
+import week11.st482988.recipeai_finalproject.ui.theme.Primary
+import week11.st482988.recipeai_finalproject.ui.theme.SubtitleGray
 import week11.st482988.recipeai_finalproject.viewmodel.AuthUiState
 import week11.st482988.recipeai_finalproject.viewmodel.AuthViewModel
 
@@ -53,72 +65,54 @@ fun LoginScreen(
             .background(MaterialTheme.colorScheme.background)
             .verticalScroll(rememberScrollState())
             .padding(24.dp),
-        verticalArrangement = Arrangement.SpaceBetween,
-        horizontalAlignment = Alignment.CenterHorizontally
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             Text(
-                text = "Welcome Back",
-                style = MaterialTheme.typography.headlineLarge,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onBackground
+                text = "Welcome back",
+                style = MaterialTheme.typography.headlineMedium
             )
 
             Text(
-                text = "Sign in to your account",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                text = "Log in to see what's cooking",
+                style = MaterialTheme.typography.titleLarge,
+                color = SubtitleGray
             )
 
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Text(
-                    text = "Email",
-                    style = MaterialTheme.typography.labelMedium,
-                    fontWeight = FontWeight.SemiBold
-                )
+            Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(text = "Email", style = MaterialTheme.typography.titleMedium)
                 AuthTextField(
                     value = email,
                     onValueChange = { email = it },
-                    label = "Enter your email",
+                    label = "Email",
                     keyboardType = KeyboardType.Email,
                     modifier = Modifier.fillMaxWidth()
                 )
             }
 
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Text(
-                    text = "Password",
-                    style = MaterialTheme.typography.labelMedium,
-                    fontWeight = FontWeight.SemiBold
-                )
+            Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(text = "Password", style = MaterialTheme.typography.titleMedium)
                 AuthTextField(
                     value = password,
                     onValueChange = { password = it },
-                    label = "Enter your password",
+                    label = "Password",
                     isPassword = true,
                     modifier = Modifier.fillMaxWidth()
                 )
             }
 
             TextButton(
-                onClick = { },
+                onClick = { navController.navigate(Screen.ForgotPassword.route) },
                 modifier = Modifier.align(Alignment.End)
             ) {
                 Text(
-                    text = "Forgot Password?",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.SemiBold
+                    text = "Forgot password?",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Primary,
+                    fontWeight = FontWeight.Bold
                 )
             }
 
@@ -134,25 +128,47 @@ fun LoginScreen(
                 text = "Login",
                 onClick = { authViewModel.login(email, password) },
                 isLoading = isLoading,
-                modifier = Modifier.fillMaxWidth().padding(top = 16.dp)
+                modifier = Modifier.fillMaxWidth()
             )
+
+            Text(
+                text = "Or",
+                style = MaterialTheme.typography.titleMedium,
+                color = MutedText,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
+
+            OutlinedButton(
+                onClick = { },
+                modifier = Modifier.fillMaxWidth().height(48.dp),
+                shape = RoundedCornerShape(10.dp),
+                colors = ButtonDefaults.outlinedButtonColors(contentColor = MutedText)
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_google_logo),
+                        contentDescription = "Google",
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Text(text = "Continue with Google", fontWeight = FontWeight.Medium)
+                }
+            }
         }
 
-        Column(
+        Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Don't have an account?",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                text = "Don't have an account? ",
+                style = MaterialTheme.typography.bodyMedium,
+                color = SubtitleGray
             )
-            TextButton(onClick = { navController.navigate(Screen.SignUp.route) }) {
+            TextButton(onClick = { navController.navigate(Screen.SignUp.route) }, contentPadding = androidx.compose.foundation.layout.PaddingValues(0.dp)) {
                 Text(
-                    text = "Sign Up",
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.primary,
+                    text = "Register",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Primary,
                     fontWeight = FontWeight.Bold
                 )
             }

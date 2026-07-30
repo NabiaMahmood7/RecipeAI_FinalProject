@@ -1,61 +1,90 @@
 package week11.st482988.recipeai_finalproject.ui.screens
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import kotlinx.coroutines.delay
+import week11.st482988.recipeai_finalproject.R
 import week11.st482988.recipeai_finalproject.ui.navigation.Screen
-import week11.st482988.recipeai_finalproject.ui.theme.Primary
+import week11.st482988.recipeai_finalproject.ui.theme.SplashGreen
+import week11.st482988.recipeai_finalproject.viewmodel.AuthViewModel
 
 @Composable
-fun SplashScreen(navController: NavHostController) {
-    LaunchedEffect(Unit) {
-        delay(2000)
-        navController.navigate(Screen.Login.route) {
-            popUpTo(Screen.Login.route)
-        }
-    }
-
+fun SplashScreen(
+    navController: NavHostController,
+    authViewModel: AuthViewModel
+) {
+    val currentUser = authViewModel.currentUser.collectAsState().value
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Primary),
+            .background(SplashGreen)
+            .padding(horizontal = 32.dp, vertical = 64.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = "🍽️",
-            fontSize = 80.sp,
-            modifier = Modifier.size(100.dp)
+        Image(
+            painter = painterResource(id = R.drawable.ic_recipe_ai_logo),
+            contentDescription = "RecipeAI logo",
+            modifier = Modifier
+                .size(168.dp)
+                .clip(RoundedCornerShape(20.dp))
         )
 
         Text(
             text = "RecipeAI",
-            fontSize = 40.sp,
+            fontFamily = FontFamily.Cursive,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onPrimary,
-            modifier = Modifier.height(50.dp),
-            style = MaterialTheme.typography.displaySmall
+            fontSize = 45.sp,
+            color = Color.White,
+            modifier = Modifier.padding(top = 24.dp)
         )
 
         Text(
-            text = "Smart Recipe Recommendations",
-            fontSize = 16.sp,
-            color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
-            style = MaterialTheme.typography.bodyMedium
+            text = "Cook smarter, waste less.",
+            fontFamily = FontFamily.Serif,
+            fontSize = 20.sp,
+            color = Color.White.copy(alpha = 0.7f),
+            modifier = Modifier.padding(top = 16.dp)
         )
+
+        OutlinedButton(
+            onClick = {
+                val destination = when {
+                    currentUser == null -> Screen.Login.route
+                    currentUser.cookingSkillLevel.isEmpty() -> Screen.ProfileSetup.route
+                    else -> Screen.Home.route
+                }
+                navController.navigate(destination) {
+                    popUpTo(Screen.Splash.route) { inclusive = true }
+                }
+            },
+            colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White),
+            border = BorderStroke(1.dp, Color.White),
+            shape = RoundedCornerShape(20.dp),
+            modifier = Modifier.padding(top = 48.dp)
+        ) {
+            Text(text = "Continue →")
+        }
     }
 }

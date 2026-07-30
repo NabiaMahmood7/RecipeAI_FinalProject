@@ -29,6 +29,8 @@ import androidx.navigation.NavHostController
 import week11.st482988.recipeai_finalproject.ui.components.AuthTextField
 import week11.st482988.recipeai_finalproject.ui.components.CustomButton
 import week11.st482988.recipeai_finalproject.ui.navigation.Screen
+import week11.st482988.recipeai_finalproject.ui.theme.Primary
+import week11.st482988.recipeai_finalproject.ui.theme.SubtitleGray
 import week11.st482988.recipeai_finalproject.viewmodel.AuthUiState
 import week11.st482988.recipeai_finalproject.viewmodel.AuthViewModel
 
@@ -63,38 +65,36 @@ fun SignUpScreen(
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(20.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             Text(
-                text = "Create Account",
-                style = MaterialTheme.typography.headlineLarge,
-                fontWeight = FontWeight.Bold
+                text = "Create your account",
+                style = MaterialTheme.typography.headlineMedium
             )
 
             Text(
-                text = "Join RecipeAI today",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                text = "Get recipes made for your kitchen",
+                style = MaterialTheme.typography.titleLarge,
+                color = SubtitleGray
             )
 
             Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text(text = "Full Name", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold)
-                AuthTextField(value = fullName, onValueChange = { fullName = it }, label = "Name", modifier = Modifier.fillMaxWidth())
+                Text(text = "Full name", style = MaterialTheme.typography.titleMedium)
+                AuthTextField(value = fullName, onValueChange = { fullName = it }, label = "Alex", modifier = Modifier.fillMaxWidth())
             }
 
             Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text(text = "Email", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold)
-                AuthTextField(value = email, onValueChange = { email = it }, label = "Email", keyboardType = KeyboardType.Email, modifier = Modifier.fillMaxWidth())
+                Text(text = "Email", style = MaterialTheme.typography.titleMedium)
+                AuthTextField(value = email, onValueChange = { email = it }, label = "you@example.com", keyboardType = KeyboardType.Email, modifier = Modifier.fillMaxWidth())
             }
 
             Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text(text = "Password", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold)
+                Text(text = "Password", style = MaterialTheme.typography.titleMedium)
                 AuthTextField(value = password, onValueChange = { password = it }, label = "Min 8 chars", isPassword = true, modifier = Modifier.fillMaxWidth())
             }
 
             Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text(text = "Confirm Password", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold)
+                Text(text = "Confirm Password", style = MaterialTheme.typography.titleMedium)
                 AuthTextField(
                     value = confirmPassword,
                     onValueChange = { confirmPassword = it },
@@ -110,8 +110,8 @@ fun SignUpScreen(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Start
             ) {
-                Checkbox(checked = agreedToTerms, onCheckedChange = { agreedToTerms = it }, colors = CheckboxDefaults.colors(checkedColor = MaterialTheme.colorScheme.primary))
-                Text(text = "I agree to Terms", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(start = 8.dp))
+                Checkbox(checked = agreedToTerms, onCheckedChange = { agreedToTerms = it }, colors = CheckboxDefaults.colors(checkedColor = Primary))
+                Text(text = "I agree to Terms", style = MaterialTheme.typography.labelSmall, color = SubtitleGray, modifier = Modifier.padding(start = 8.dp))
             }
 
             if (uiState is AuthUiState.Error) {
@@ -119,18 +119,18 @@ fun SignUpScreen(
             }
 
             CustomButton(
-                text = "Create Account",
+                text = "Create account",
                 onClick = { if (agreedToTerms && password == confirmPassword) authViewModel.register(email, password, fullName) },
                 isLoading = isLoading,
                 enabled = agreedToTerms && password == confirmPassword && fullName.isNotEmpty(),
-                modifier = Modifier.fillMaxWidth().padding(top = 16.dp)
+                modifier = Modifier.fillMaxWidth()
             )
         }
 
-        Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text(text = "Have an account?", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            TextButton(onClick = { navController.navigate(Screen.Login.route) }) {
-                Text(text = "Login", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+            Text(text = "Already have an account? ", style = MaterialTheme.typography.bodyMedium, color = SubtitleGray)
+            TextButton(onClick = { navController.navigate(Screen.Login.route) }, contentPadding = androidx.compose.foundation.layout.PaddingValues(0.dp)) {
+                Text(text = "Log in", style = MaterialTheme.typography.bodyMedium, color = Primary, fontWeight = FontWeight.Bold)
             }
         }
     }
