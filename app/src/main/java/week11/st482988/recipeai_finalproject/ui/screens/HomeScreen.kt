@@ -14,6 +14,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -36,6 +37,7 @@ import week11.st482988.recipeai_finalproject.ui.navigation.Screen
 import week11.st482988.recipeai_finalproject.viewmodel.AuthViewModel
 import week11.st482988.recipeai_finalproject.data.model.Recipe
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     navController: NavHostController,
@@ -51,7 +53,15 @@ fun HomeScreen(
             Text(text = "What would you like to cook today?", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
 
-        SearchBar(query = searchQuery, onQueryChange = { searchQuery = it }, onSearch = {}, active = false, onActiveChange = {}, modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp, vertical = 8.dp), placeholder = { Text("Search...") })
+        SearchBar(
+            query = searchQuery,
+            onQueryChange = { searchQuery = it },
+            onSearch = {},
+            active = false,
+            onActiveChange = {},
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp, vertical = 8.dp),
+            placeholder = { Text("Search...") }
+        ) {}
 
         LazyColumn(modifier = Modifier.fillMaxWidth().weight(1f).padding(horizontal = 24.dp), verticalArrangement = Arrangement.spacedBy(16.dp), contentPadding = androidx.compose.foundation.layout.PaddingValues(bottom = 16.dp)) {
             item {

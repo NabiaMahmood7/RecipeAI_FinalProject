@@ -80,7 +80,6 @@ fun AuthTextField(
             text = errorMessage,
             color = MaterialTheme.colorScheme.error,
             style = MaterialTheme.typography.labelSmall,
-            modifier = Modifier.border(0.dp)
         )
     }
 }

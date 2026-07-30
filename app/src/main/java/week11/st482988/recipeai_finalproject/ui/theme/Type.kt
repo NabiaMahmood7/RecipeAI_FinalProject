@@ -38,7 +38,7 @@ fun RecipeAITheme(
 ) {
     MaterialTheme(
         colorScheme = LightColorScheme,
-        typography = AppTypography,
+        typography = Typography,
         content = content
     )
 }

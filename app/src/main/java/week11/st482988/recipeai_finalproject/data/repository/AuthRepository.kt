@@ -104,8 +104,10 @@ class AuthRepository {
             firestore.collection("users")
                 .document(userId)
                 .update(
-                    "dietaryPreferences" to dietaryPreferences,
-                    "cookingSkillLevel" to cookingSkillLevel
+                    mapOf(
+                        "dietaryPreferences" to dietaryPreferences,
+                        "cookingSkillLevel" to cookingSkillLevel
+                    )
                 )
                 .await()
             Result.success(Unit)
