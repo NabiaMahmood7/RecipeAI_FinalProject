@@ -32,6 +32,7 @@ private val LightColorScheme = lightColorScheme(
     */
 )
 
+
 @Composable
 fun RecipeAI_finalprojectTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -48,6 +49,7 @@ fun RecipeAI_finalprojectTheme(
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
+
 
     MaterialTheme(
         colorScheme = colorScheme,
