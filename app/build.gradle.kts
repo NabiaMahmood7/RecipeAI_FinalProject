@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     id("com.google.gms.google-services") version "4.4.0"
+    alias(libs.plugins.kotlin.android)
 }
 
 android {
@@ -36,6 +37,9 @@ android {
     buildFeatures {
         compose = true
     }
+    kotlinOptions {
+        jvmTarget = "17"
+    }
 }
 
 dependencies {
@@ -67,6 +71,7 @@ dependencies {
 
     // Material Icons
     implementation("androidx.compose.material:material-icons-extended:1.5.4")
+    implementation(libs.core.ktx)
 
     testImplementation(libs.junit)
 
