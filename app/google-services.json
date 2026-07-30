@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "422648083634",
+    "firebase_url": "https://recipeaifinalproject-default-rtdb.firebaseio.com",
+    "project_id": "recipeaifinalproject",
+    "storage_bucket": "recipeaifinalproject.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:422648083634:android:7a07c1e3554c4d490845ab",
+        "android_client_info": {
+          "package_name": "week11.st482988.recipeai_finalproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "422648083634-spn7ape568quk9ope1f0qbfp4l90msdh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCLGJum-xWjSgatevGa9s2_96OO-IwE20"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "422648083634-spn7ape568quk9ope1f0qbfp4l90msdh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
