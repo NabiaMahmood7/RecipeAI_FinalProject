@@ -2,7 +2,6 @@ package week11.st482988.recipeai_finalproject.utils
 
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
-import week11.st482988.recipeai_finalproject.data.SampleRecipes
 
 object FirebaseDataUploader {
     private val firestore = FirebaseFirestore.getInstance()
