@@ -5,7 +5,7 @@ import week11.st482988.recipeai_finalproject.data.model.RecipeRecommendationResu
 import week11.st482988.recipeai_finalproject.data.model.UserPreferences
 import week11.st482988.recipeai_finalproject.data.model.RecommendationWeights
 
-private val UserPreferences.dietaryPreferences: Any
+
 
 class RecommendationEngine {
 
