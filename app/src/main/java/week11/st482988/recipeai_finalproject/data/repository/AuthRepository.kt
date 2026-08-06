@@ -2,7 +2,6 @@
 package week11.st482988.recipeai_finalproject.data.repository
 
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
@@ -60,29 +59,6 @@ class AuthRepository {
             )
 
             Result.success(firestoreUser)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
-
-    suspend fun signInWithGoogle(idToken: String): Result<User> {
-        return try {
-            val credential = GoogleAuthProvider.getCredential(idToken, null)
-            val authResult = auth.signInWithCredential(credential).await()
-            val user = authResult.user ?: throw Exception("Google sign-in failed")
-
-            val existingDoc = firestore.collection("users").document(user.uid).get().await()
-            val resultUser = existingDoc.toObject(User::class.java) ?: run {
-                val newUser = User(
-                    uid = user.uid,
-                    email = user.email ?: "",
-                    fullName = user.displayName ?: ""
-                )
-                firestore.collection("users").document(user.uid).set(newUser.toMap()).await()
-                newUser
-            }
-
-            Result.success(resultUser)
         } catch (e: Exception) {
             Result.failure(e)
         }

@@ -1,6 +1,5 @@
 package week11.st482988.recipeai_finalproject.ui.screens
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -24,23 +23,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.credentials.CredentialManager
-import androidx.credentials.CustomCredential
-import androidx.credentials.GetCredentialRequest
-import androidx.credentials.exceptions.GetCredentialException
 import androidx.navigation.NavHostController
-import com.google.android.libraries.identity.googleid.GetGoogleIdOption
-import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
-import kotlinx.coroutines.launch
 import week11.st482988.recipeai_finalproject.R
 import week11.st482988.recipeai_finalproject.ui.components.AuthTextField
 import week11.st482988.recipeai_finalproject.ui.components.CustomButton
@@ -58,10 +48,6 @@ fun LoginScreen(
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var googleError by remember { mutableStateOf<String?>(null) }
-
-    val context = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
 
     val uiState = authViewModel.uiState.collectAsState().value
     val isLoading = authViewModel.isLoading.collectAsState().value
@@ -152,46 +138,8 @@ fun LoginScreen(
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
 
-            if (googleError != null) {
-                Text(
-                    text = googleError ?: "",
-                    color = MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.labelSmall
-                )
-            }
-
             OutlinedButton(
-                onClick = {
-                    googleError = null
-                    coroutineScope.launch {
-                        try {
-                            val googleIdOption = GetGoogleIdOption.Builder()
-                                .setFilterByAuthorizedAccounts(false)
-                                .setServerClientId(context.getString(R.string.default_web_client_id))
-                                .build()
-
-                            val request = GetCredentialRequest.Builder()
-                                .addCredentialOption(googleIdOption)
-                                .build()
-
-                            val response = CredentialManager.create(context)
-                                .getCredential(context, request)
-
-                            val credential = response.credential
-                            if (credential is CustomCredential &&
-                                credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
-                            ) {
-                                val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
-                                authViewModel.loginWithGoogle(googleIdTokenCredential.idToken)
-                            } else {
-                                googleError = "Unexpected credential type from Google"
-                            }
-                        } catch (e: GetCredentialException) {
-                            Log.e("LoginScreen", "Google sign-in failed", e)
-                            googleError = "Google sign-in failed: ${e.message}"
-                        }
-                    }
-                },
+                onClick = { },
                 modifier = Modifier.fillMaxWidth().height(48.dp),
                 shape = RoundedCornerShape(10.dp),
                 colors = ButtonDefaults.outlinedButtonColors(contentColor = MutedText)
