@@ -84,6 +84,28 @@ class AuthViewModel : ViewModel() {
         }
     }
 
+    fun loginWithGoogle(idToken: String) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            _uiState.value = AuthUiState.Loading
+
+            val result = authRepository.signInWithGoogle(idToken)
+
+            result.onSuccess { user ->
+                _currentUser.value = user
+                _uiState.value = AuthUiState.Success("Login successful")
+                _isLoading.value = false
+            }
+
+            result.onFailure { error ->
+                _uiState.value = AuthUiState.Error(
+                    error.message ?: "Google sign-in failed. Please try again."
+                )
+                _isLoading.value = false
+            }
+        }
+    }
+
     fun logout() {
         viewModelScope.launch {
             authRepository.logout().onSuccess {
