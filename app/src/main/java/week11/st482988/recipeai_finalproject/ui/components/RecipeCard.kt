@@ -24,10 +24,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
 import week11.st482988.recipeai_finalproject.data.model.Recipe
 import week11.st482988.recipeai_finalproject.ui.theme.CardMetaGray
 import week11.st482988.recipeai_finalproject.ui.theme.CardSecondaryText
@@ -47,14 +45,13 @@ fun RecipeCard(
             .clickable { onClick(recipe.id) }
     ) {
         Box {
-            AsyncImage(
-                model = recipe.imageUrl.ifEmpty { "https://via.placeholder.com/400x300?text=No+Image" },
+            RecipeImage(
+                imageUrl = recipe.imageUrl,
                 contentDescription = recipe.title,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(151.dp)
-                    .clip(RoundedCornerShape(16.dp)),
-                contentScale = ContentScale.Crop
+                    .clip(RoundedCornerShape(16.dp))
             )
 
             IconButton(
