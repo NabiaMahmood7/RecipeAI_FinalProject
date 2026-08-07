@@ -5,12 +5,17 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,8 +25,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import week11.st482988.recipeai_finalproject.ui.components.BottomNavBar
-import week11.st482988.recipeai_finalproject.ui.components.NavTab
 import week11.st482988.recipeai_finalproject.ui.components.RecipeCard
 import week11.st482988.recipeai_finalproject.ui.navigation.Screen
 import week11.st482988.recipeai_finalproject.ui.theme.SubtitleGray
@@ -29,32 +32,33 @@ import week11.st482988.recipeai_finalproject.viewmodel.AuthViewModel
 import week11.st482988.recipeai_finalproject.viewmodel.RecipeViewModel
 
 @Composable
-fun FavoritesScreen(
+fun HistoryScreen(
     navController: NavHostController,
     authViewModel: AuthViewModel,
     recipeViewModel: RecipeViewModel
 ) {
     val currentUser = authViewModel.currentUser.collectAsState().value
-    val favoriteIds = currentUser?.favorites ?: emptyList()
+    val historyIds = currentUser?.viewHistory ?: emptyList()
 
-    LaunchedEffect(favoriteIds) { recipeViewModel.loadFavorites(favoriteIds) }
+    LaunchedEffect(historyIds) { recipeViewModel.loadHistory(historyIds) }
 
-    val savedRecipes = recipeViewModel.favoriteRecipes.collectAsState().value
+    val historyRecipes = recipeViewModel.historyRecipes.collectAsState().value
 
     Column(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
-        Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp, vertical = 16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            Text(text = "Favorites", style = MaterialTheme.typography.headlineMedium)
-            Text(
-                text = "${savedRecipes.size} saved recipes",
-                style = MaterialTheme.typography.titleLarge,
-                color = SubtitleGray
-            )
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(onClick = { navController.popBackStack() }) {
+                Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+            }
+            Text(text = "Recently viewed", style = MaterialTheme.typography.headlineLarge)
         }
 
-        if (savedRecipes.isEmpty()) {
-            Box(modifier = Modifier.fillMaxWidth().weight(1f).padding(32.dp), contentAlignment = Alignment.Center) {
+        if (historyRecipes.isEmpty()) {
+            Box(modifier = Modifier.fillMaxSize().padding(32.dp), contentAlignment = Alignment.Center) {
                 Text(
-                    text = "No saved recipes yet — tap the heart on any recipe to save it here.",
+                    text = "Recipes you open will show up here.",
                     style = MaterialTheme.typography.bodyMedium,
                     color = SubtitleGray
                 )
@@ -67,23 +71,15 @@ fun FavoritesScreen(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                items(savedRecipes) { recipe ->
+                items(historyRecipes) { recipe ->
                     RecipeCard(
                         recipe = recipe,
                         onClick = { id -> navController.navigate(Screen.RecipeDetail.createRoute(id)) },
                         onFavoriteClick = { authViewModel.toggleFavorite(recipe.id) },
-                        isFavorite = true
+                        isFavorite = currentUser?.favorites?.contains(recipe.id) == true
                     )
                 }
             }
         }
-
-        BottomNavBar(
-            selectedTab = NavTab.FAVORITES,
-            onHomeClick = { navController.navigate(Screen.Home.route) },
-            onFavoritesClick = { },
-            onInventoryClick = { navController.navigate(Screen.Inventory.route) },
-            onProfileClick = { navController.navigate(Screen.Profile.route) }
-        )
     }
 }

@@ -1,6 +1,7 @@
 package week11.st482988.recipeai_finalproject.data.repository
 
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
@@ -63,6 +64,29 @@ class AuthRepository {
         }
     }
 
+    suspend fun signInWithGoogle(idToken: String): Result<User> {
+        return try {
+            val credential = GoogleAuthProvider.getCredential(idToken, null)
+            val authResult = auth.signInWithCredential(credential).await()
+            val user = authResult.user ?: throw Exception("Google sign-in failed")
+
+            val existingDoc = firestore.collection("users").document(user.uid).get().await()
+            val resultUser = existingDoc.toObject(User::class.java) ?: run {
+                val newUser = User(
+                    uid = user.uid,
+                    email = user.email ?: "",
+                    fullName = user.displayName ?: ""
+                )
+                firestore.collection("users").document(user.uid).set(newUser.toMap()).await()
+                newUser
+            }
+
+            Result.success(resultUser)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
     suspend fun getCurrentUser(): User? {
         val user = auth.currentUser ?: return null
         return try {
@@ -70,31 +94,18 @@ class AuthRepository {
                 .document(user.uid)
                 .get()
                 .await()
-                .toObject(User::class.java) ?: User(uid = user.uid, email = user.email ?: "", fullName = user.displayName ?: "")
+                .toObject(User::class.java) ?: User(
+                uid = user.uid,
+                email = user.email ?: "",
+                fullName = user.displayName ?: ""
+            )
         } catch (e: Exception) {
-            User(uid = user.uid, email = user.email ?: "", fullName = user.displayName ?: "")
+            User(
+                uid = user.uid,
+                email = user.email ?: "",
+                fullName = user.displayName ?: ""
+            )
         }
-    }
-
-    suspend fun updateFavorites(userId: String, favorites: List<String>): Result<Unit> = try {
-        firestore.collection("users").document(userId).update("favorites", favorites).await()
-        Result.success(Unit)
-    } catch (e: Exception) {
-        Result.failure(e)
-    }
-
-    suspend fun updateViewHistory(userId: String, viewHistory: List<String>): Result<Unit> = try {
-        firestore.collection("users").document(userId).update("viewHistory", viewHistory).await()
-        Result.success(Unit)
-    } catch (e: Exception) {
-        Result.failure(e)
-    }
-
-    suspend fun updateInventory(userId: String, inventory: List<String>): Result<Unit> = try {
-        firestore.collection("users").document(userId).update("inventory", inventory).await()
-        Result.success(Unit)
-    } catch (e: Exception) {
-        Result.failure(e)
     }
 
     fun isUserLoggedIn(): Boolean {
@@ -113,6 +124,42 @@ class AuthRepository {
     suspend fun resetPassword(email: String): Result<Unit> {
         return try {
             auth.sendPasswordResetEmail(email).await()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun updateFavorites(userId: String, favorites: List<String>): Result<Unit> {
+        return try {
+            firestore.collection("users")
+                .document(userId)
+                .update("favorites", favorites)
+                .await()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun updateViewHistory(userId: String, viewHistory: List<String>): Result<Unit> {
+        return try {
+            firestore.collection("users")
+                .document(userId)
+                .update("viewHistory", viewHistory)
+                .await()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun updateInventory(userId: String, inventory: List<String>): Result<Unit> {
+        return try {
+            firestore.collection("users")
+                .document(userId)
+                .update("inventory", inventory)
+                .await()
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)

@@ -28,20 +28,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import week11.st482988.recipeai_finalproject.data.repository.AuthRepository
 import week11.st482988.recipeai_finalproject.ui.components.CustomButton
 import week11.st482988.recipeai_finalproject.ui.navigation.Screen
 import week11.st482988.recipeai_finalproject.viewmodel.AuthViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 @Composable
 fun ProfileSetupScreen(
     navController: NavHostController,
     authViewModel: AuthViewModel
 ) {
-    val currentUser = authViewModel.currentUser.collectAsState().value
+    val isLoading = authViewModel.isLoading.collectAsState().value
     var selectedPreferences by remember { mutableStateOf(setOf<String>()) }
     var cookingLevel by remember { mutableStateOf("") }
 
@@ -87,15 +83,12 @@ fun ProfileSetupScreen(
         CustomButton(
             text = "Continue",
             onClick = {
-                if (currentUser != null && cookingLevel.isNotEmpty()) {
-                    CoroutineScope(Dispatchers.Main).launch {
-                        val authRepository = AuthRepository()
-                        authRepository.updateUserPreferences(currentUser.uid, selectedPreferences.toList(), cookingLevel)
-                        navController.navigate(Screen.Home.route) { popUpTo(Screen.ProfileSetup.route) { inclusive = true } }
-                    }
+                authViewModel.completeProfileSetup(selectedPreferences.toList(), cookingLevel) {
+                    navController.navigate(Screen.Home.route) { popUpTo(Screen.ProfileSetup.route) { inclusive = true } }
                 }
             },
-            enabled = cookingLevel.isNotEmpty(),
+            isLoading = isLoading,
+            enabled = cookingLevel.isNotEmpty() && !isLoading,
             modifier = Modifier.fillMaxWidth()
         )
     }
