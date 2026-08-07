@@ -34,7 +34,6 @@ val DarkBackground = Color(0xFF121212)
 val Primary = Color(0xFF5C863E)
 val LightGray = Color(0xFFE8E1D3)
 
-// RecipeAI Figma design tokens
 val SplashGreen = Color(0xFF9DC183)
 val MutedText = Color(0xFFB3A890)
 val SubtitleGray = Color(0x80000000)

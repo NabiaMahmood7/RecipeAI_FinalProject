@@ -104,9 +104,6 @@ class AIRecommendationRepository(
 
     private companion object {
         const val TAG = "AIRecommendation"
-        // Gemini's own image models (Nano Banana) and Imagen 4 are both unreachable on
-        // this project's free API key (0 quota / "no longer available to new users"),
-        // so image generation is routed through Hugging Face's free credits instead.
         const val IMAGE_MODEL = "stabilityai/stable-diffusion-3-medium-diffusers"
         const val MAX_IMAGE_DIMENSION_PX = 512
         const val IMAGE_JPEG_QUALITY = 60
@@ -268,11 +265,6 @@ class AIRecommendationRepository(
             }
         }
 
-    /**
-     * Firestore caps documents at 1MB, so the raw Gemini image (often 1MB+ on its own)
-     * gets downscaled and re-compressed before being base64-encoded into imageUrl as a
-     * data: URI - no external hosting or Firebase Storage (Blaze plan) needed.
-     */
     private fun encodeAsDataUri(bytes: ByteArray): String? = try {
         val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size) ?: return null
         val scale = MAX_IMAGE_DIMENSION_PX.toFloat() / maxOf(bitmap.width, bitmap.height)
@@ -291,11 +283,6 @@ class AIRecommendationRepository(
         null
     }
 
-    /**
-     * Tries progressively more generic searches so a fanciful AI-invented dish name
-     * (e.g. "Sunrise Citrus Quinoa Bowl") still has a good chance of finding a real,
-     * relevant photo even if the exact phrase has no match on Wikimedia Commons.
-     */
     private suspend fun fetchWikimediaImageUrl(title: String, cuisine: String, ingredients: List<String>): String? {
         val mainIngredient = ingredients.firstOrNull().orEmpty()
         val candidateQueries = listOfNotNull(

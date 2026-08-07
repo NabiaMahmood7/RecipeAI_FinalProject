@@ -127,7 +127,7 @@ fun SignUpScreen(
             )
         }
 
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
             Text(text = "Already have an account? ", style = MaterialTheme.typography.bodyMedium, color = SubtitleGray)
             TextButton(onClick = { navController.navigate(Screen.Login.route) }, contentPadding = androidx.compose.foundation.layout.PaddingValues(0.dp)) {
                 Text(text = "Log in", style = MaterialTheme.typography.bodyMedium, color = Primary, fontWeight = FontWeight.Bold)

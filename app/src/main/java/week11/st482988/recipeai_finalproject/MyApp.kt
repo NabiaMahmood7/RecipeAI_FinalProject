@@ -13,9 +13,6 @@ class MyApp : Application(), ImageLoaderFactory {
         FirebaseApp.initializeApp(this)
     }
 
-    // Wikimedia (and many other image hosts) reject requests with no descriptive
-    // User-Agent header — Coil's default OkHttp client sends a generic one, which
-    // gets a silent 403. This applies a real User-Agent to every image load.
     override fun newImageLoader(): ImageLoader {
         val client = OkHttpClient.Builder()
             .addInterceptor { chain ->

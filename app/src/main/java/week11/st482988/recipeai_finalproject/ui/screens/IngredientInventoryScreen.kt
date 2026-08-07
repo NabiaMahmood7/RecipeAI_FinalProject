@@ -31,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import week11.st482988.recipeai_finalproject.ui.components.AuthTextField
@@ -101,10 +102,24 @@ fun IngredientInventoryScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(text = item.name, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(
+                        text = item.name,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f, fill = false).padding(end = 8.dp)
+                    )
+                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                         if (item.qty.isNotBlank() || item.unit.isNotBlank()) {
-                            Text(text = "${item.qty} ${item.unit}".trim(), style = MaterialTheme.typography.bodyMedium, color = SubtitleGray)
+                            Text(
+                                text = "${item.qty} ${item.unit}".trim(),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = SubtitleGray,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier.padding(end = 4.dp)
+                            )
                         }
                         IconButton(
                             onClick = { persist(items - item) },
