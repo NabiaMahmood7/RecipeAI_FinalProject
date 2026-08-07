@@ -157,7 +157,7 @@ fun HomeScreen(
 
             recipes.isEmpty() -> Box(modifier = Modifier.fillMaxWidth().weight(1f).padding(32.dp), contentAlignment = Alignment.Center) {
                 Text(
-                    text = "No recipes yet — check back soon!",
+                    text = "No recipes yet  check back soon!",
                     style = MaterialTheme.typography.bodyMedium,
                     color = SubtitleGray
                 )
