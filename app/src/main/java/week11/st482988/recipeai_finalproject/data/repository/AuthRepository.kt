@@ -1,4 +1,3 @@
-
 package week11.st482988.recipeai_finalproject.data.repository
 
 import com.google.firebase.auth.FirebaseAuth
@@ -64,13 +63,38 @@ class AuthRepository {
         }
     }
 
-    fun getCurrentUser(): User? {
+    suspend fun getCurrentUser(): User? {
         val user = auth.currentUser ?: return null
-        return User(
-            uid = user.uid,
-            email = user.email ?: "",
-            fullName = user.displayName ?: ""
-        )
+        return try {
+            firestore.collection("users")
+                .document(user.uid)
+                .get()
+                .await()
+                .toObject(User::class.java) ?: User(uid = user.uid, email = user.email ?: "", fullName = user.displayName ?: "")
+        } catch (e: Exception) {
+            User(uid = user.uid, email = user.email ?: "", fullName = user.displayName ?: "")
+        }
+    }
+
+    suspend fun updateFavorites(userId: String, favorites: List<String>): Result<Unit> = try {
+        firestore.collection("users").document(userId).update("favorites", favorites).await()
+        Result.success(Unit)
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
+
+    suspend fun updateViewHistory(userId: String, viewHistory: List<String>): Result<Unit> = try {
+        firestore.collection("users").document(userId).update("viewHistory", viewHistory).await()
+        Result.success(Unit)
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
+
+    suspend fun updateInventory(userId: String, inventory: List<String>): Result<Unit> = try {
+        firestore.collection("users").document(userId).update("inventory", inventory).await()
+        Result.success(Unit)
+    } catch (e: Exception) {
+        Result.failure(e)
     }
 
     fun isUserLoggedIn(): Boolean {

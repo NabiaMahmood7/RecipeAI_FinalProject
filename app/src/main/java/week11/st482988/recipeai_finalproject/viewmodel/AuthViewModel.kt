@@ -22,8 +22,11 @@ class AuthViewModel : ViewModel() {
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
     init {
-        _currentUser.value = authRepository.getCurrentUser()
+        viewModelScope.launch {
+            _currentUser.value = authRepository.getCurrentUser()
+        }
     }
+
 
     fun register(email: String, password: String, fullName: String) {
         if (email.isEmpty() || password.isEmpty() || fullName.isEmpty()) {
@@ -83,6 +86,53 @@ class AuthViewModel : ViewModel() {
             }
         }
     }
+    fun toggleFavorite(recipeId: String) {
+        val user = _currentUser.value ?: return
+        val updated = if (user.favorites.contains(recipeId)) user.favorites - recipeId else user.favorites + recipeId
+        viewModelScope.launch {
+            authRepository.updateFavorites(user.uid, updated).onSuccess {
+                _currentUser.value = user.copy(favorites = updated)
+            }
+        }
+    }
+
+    fun recordView(recipeId: String) {
+        val user = _currentUser.value ?: return
+        val updated = (listOf(recipeId) + user.viewHistory.filterNot { it == recipeId }).take(20)
+        if (updated == user.viewHistory) return
+        viewModelScope.launch {
+            authRepository.updateViewHistory(user.uid, updated).onSuccess {
+                _currentUser.value = user.copy(viewHistory = updated)
+            }
+        }
+    }
+
+    fun completeProfileSetup(dietaryPreferences: List<String>, cookingSkillLevel: String, onComplete: () -> Unit) {
+        val user = _currentUser.value ?: return
+        viewModelScope.launch {
+            _isLoading.value = true
+            authRepository.updateUserPreferences(user.uid, dietaryPreferences, cookingSkillLevel)
+                .onSuccess {
+                    _currentUser.value = user.copy(dietaryPreferences = dietaryPreferences, cookingSkillLevel = cookingSkillLevel)
+                    _isLoading.value = false
+                    onComplete()
+                }
+                .onFailure { error ->
+                    _uiState.value = AuthUiState.Error(error.message ?: "Failed to save your preferences")
+                    _isLoading.value = false
+                }
+        }
+    }
+
+    fun updateInventory(inventory: List<String>) {
+        val user = _currentUser.value ?: return
+        viewModelScope.launch {
+            authRepository.updateInventory(user.uid, inventory).onSuccess {
+                _currentUser.value = user.copy(inventory = inventory)
+            }
+        }
+    }
+
 
     fun logout() {
         viewModelScope.launch {
