@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import week11.st482988.recipeai_finalproject.viewmodel.AuthViewModel
+import week11.st482988.recipeai_finalproject.viewmodel.RecipeViewModel
 import week11.st482988.recipeai_finalproject.ui.screens.LoginScreen
 import week11.st482988.recipeai_finalproject.ui.screens.SignUpScreen
 import week11.st482988.recipeai_finalproject.ui.screens.ForgotPasswordScreen
@@ -14,11 +15,16 @@ import week11.st482988.recipeai_finalproject.ui.screens.HomeScreen
 import week11.st482988.recipeai_finalproject.ui.screens.FavoritesScreen
 import week11.st482988.recipeai_finalproject.ui.screens.ProfileScreen
 import week11.st482988.recipeai_finalproject.ui.screens.SplashScreen
+import week11.st482988.recipeai_finalproject.ui.screens.SearchScreen
+import week11.st482988.recipeai_finalproject.ui.screens.RecipeDetailScreen
+import week11.st482988.recipeai_finalproject.ui.screens.IngredientInventoryScreen
+import week11.st482988.recipeai_finalproject.ui.screens.HistoryScreen
 
 @Composable
 fun SetupNavGraph(
     navController: NavHostController,
-    authViewModel: AuthViewModel
+    authViewModel: AuthViewModel,
+    recipeViewModel: RecipeViewModel
 ) {
     NavHost(
         navController = navController,
@@ -62,21 +68,58 @@ fun SetupNavGraph(
         composable(route = Screen.Home.route) {
             HomeScreen(
                 navController = navController,
-                authViewModel = authViewModel
+                authViewModel = authViewModel,
+                recipeViewModel = recipeViewModel
             )
         }
 
         composable(route = Screen.Favorites.route) {
             FavoritesScreen(
                 navController = navController,
-                authViewModel = authViewModel
+                authViewModel = authViewModel,
+                recipeViewModel = recipeViewModel
             )
         }
 
         composable(route = Screen.Profile.route) {
             ProfileScreen(
                 navController = navController,
+                authViewModel = authViewModel,
+                recipeViewModel = recipeViewModel
+            )
+        }
+
+        composable(route = Screen.Search.route) {
+            SearchScreen(
+                navController = navController,
+                recipeViewModel = recipeViewModel,
                 authViewModel = authViewModel
+            )
+        }
+
+        composable(route = Screen.RecipeDetail.route) { backStackEntry ->
+            val recipeId = backStackEntry.arguments?.getString("recipeId") ?: ""
+            RecipeDetailScreen(
+                recipeId = recipeId,
+                navController = navController,
+                recipeViewModel = recipeViewModel,
+                authViewModel = authViewModel
+            )
+        }
+
+        composable(route = Screen.Inventory.route) {
+            IngredientInventoryScreen(
+                navController = navController,
+                authViewModel = authViewModel,
+                recipeViewModel = recipeViewModel
+            )
+        }
+
+        composable(route = Screen.History.route) {
+            HistoryScreen(
+                navController = navController,
+                authViewModel = authViewModel,
+                recipeViewModel = recipeViewModel
             )
         }
     }
@@ -94,6 +137,7 @@ sealed class Screen(val route: String) {
         fun createRoute(recipeId: String) = "recipe_detail/$recipeId"
     }
     object Inventory : Screen("inventory")
+    object History : Screen("history")
     object Favorites : Screen("favorites")
     object Profile : Screen("profile")
 }

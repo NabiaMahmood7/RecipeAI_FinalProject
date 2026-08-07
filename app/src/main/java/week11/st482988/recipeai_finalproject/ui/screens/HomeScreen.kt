@@ -120,7 +120,7 @@ fun HomeScreen(
 
         if (recommendationError != null && recommendations.isEmpty()) {
             Text(
-                text = "AI recommendations unavailable ($recommendationError) — showing all recipes instead.",
+                text = "AI recommendations unavailable ($recommendationError), showing all recipes instead.",
                 style = MaterialTheme.typography.labelSmall,
                 color = SubtitleGray,
                 modifier = Modifier.padding(start = 24.dp, end = 24.dp, bottom = 8.dp)
@@ -157,7 +157,7 @@ fun HomeScreen(
 
             recipes.isEmpty() -> Box(modifier = Modifier.fillMaxWidth().weight(1f).padding(32.dp), contentAlignment = Alignment.Center) {
                 Text(
-                    text = "No recipes yet  check back soon!",
+                    text = "No recipes yet, check back soon!",
                     style = MaterialTheme.typography.bodyMedium,
                     color = SubtitleGray
                 )

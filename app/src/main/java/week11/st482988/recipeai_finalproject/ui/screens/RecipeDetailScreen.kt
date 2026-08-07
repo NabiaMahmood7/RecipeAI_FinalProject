@@ -309,7 +309,7 @@ private fun ReviewsSection(
 
         if (reviews.isEmpty()) {
             Text(
-                text = "No reviews yet — be the first to share your thoughts!",
+                text = "No reviews yet, be the first to share your thoughts!",
                 style = MaterialTheme.typography.bodyMedium,
                 color = SubtitleGray,
                 modifier = Modifier.padding(vertical = 8.dp)

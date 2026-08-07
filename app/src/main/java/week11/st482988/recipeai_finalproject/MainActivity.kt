@@ -13,6 +13,7 @@ import androidx.navigation.compose.rememberNavController
 import week11.st482988.recipeai_finalproject.ui.navigation.SetupNavGraph
 import week11.st482988.recipeai_finalproject.ui.theme.RecipeAITheme
 import week11.st482988.recipeai_finalproject.viewmodel.AuthViewModel
+import week11.st482988.recipeai_finalproject.viewmodel.RecipeViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,10 +26,12 @@ class MainActivity : ComponentActivity() {
                 ) {
                     val navController = rememberNavController()
                     val authViewModel = ViewModelProvider(this@MainActivity)[AuthViewModel::class.java]
+                    val recipeViewModel = ViewModelProvider(this@MainActivity)[RecipeViewModel::class.java]
 
                     SetupNavGraph(
                         navController = navController,
-                        authViewModel = authViewModel
+                        authViewModel = authViewModel,
+                        recipeViewModel = recipeViewModel
                     )
                 }
             }

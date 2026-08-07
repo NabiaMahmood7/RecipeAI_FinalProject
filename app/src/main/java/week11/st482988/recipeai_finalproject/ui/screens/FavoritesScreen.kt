@@ -54,7 +54,7 @@ fun FavoritesScreen(
         if (savedRecipes.isEmpty()) {
             Box(modifier = Modifier.fillMaxWidth().weight(1f).padding(32.dp), contentAlignment = Alignment.Center) {
                 Text(
-                    text = "No saved recipes yet — tap the heart on any recipe to save it here.",
+                    text = "No saved recipes yet, tap the heart on any recipe to save it here.",
                     style = MaterialTheme.typography.bodyMedium,
                     color = SubtitleGray
                 )

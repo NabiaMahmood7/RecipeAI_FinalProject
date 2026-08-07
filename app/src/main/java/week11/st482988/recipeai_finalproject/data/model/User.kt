@@ -9,6 +9,7 @@ data class User(
     val cookingSkillLevel: String = "",
     val favorites: List<String> = emptyList(),
     val inventory: List<String> = emptyList(),
+    val viewHistory: List<String> = emptyList(),
     val createdAt: Long = System.currentTimeMillis()
 ) {
     fun toMap(): Map<String, Any> = mapOf(
@@ -19,6 +20,7 @@ data class User(
         "cookingSkillLevel" to cookingSkillLevel,
         "favorites" to favorites,
         "inventory" to inventory,
+        "viewHistory" to viewHistory,
         "createdAt" to createdAt
     )
 }
